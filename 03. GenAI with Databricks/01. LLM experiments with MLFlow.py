@@ -7,8 +7,10 @@ from mlflow.models import infer_signature
 from mlflow.transformers import generate_signature_output
 from transformers import pipeline
 from datasets import load_dataset, concatenate_datasets
+load_dataset.utils.logging.disable_progress_bar()
 
 import pandas as pd
+import os
 import pyspark.sql.functions as F
 
 import mlflow
@@ -26,7 +28,7 @@ arctifact_location = "dbfs:/FileStore/mlflow"
 # COMMAND ----------
 
 # DBTITLE 1,Set Experiment
-experiment_name = "/Shared/MLFlow Experiments/SentimentAnalysis"
+experiment_name = "/Shared/SentimentAnalysis"
 
 try:
   experiment_id = mlflow.create_experiment(name = experiment_name
@@ -44,18 +46,26 @@ except:
 # COMMAND ----------
 
 # DBTITLE 1,Load HF dataset and save it as Delta Table
-#dataset = load_dataset("sentiment140")
-#dataset = concatenate_datasets([dataset['train'],dataset['test']])
-#dataset = pd.DataFrame(dataset)
-#dataset = spark.createDataFrame(dataset)
-#dataset.write.mode('overwrite').saveAsTable('test.sentiment_analysis.bronze_sentiment')
-dataset = spark.read.table('test.sentiment_analysis.bronze_sentiment')
+list_values = {'0': 'negative', '2' : 'neutral', '4' : 'positive'}
+dataset = load_dataset("sentiment140")
+dataset = concatenate_datasets([dataset['train'], dataset['test']])
+dataset = pd.DataFrame(dataset)
+
+dataset = spark.createDataFrame(dataset).select('text','sentiment')
+
+dataset = dataset.replace(list_values,subset=['sentiment'])
+dataset.write.mode('overwrite').saveAsTable('bronze_sentiment')
+dataset = spark.read.table('bronze_sentiment').limit(100)
 dataset.display()
 
 # COMMAND ----------
 
-model = pipeline(task="text-classification",
-                      model="nickwong64/bert-base-uncased-poems-sentiment")
+# MAGIC %sql CREATE SCHEMA  IF NOT EXISTS  test;
+
+# COMMAND ----------
+
+model = pipeline(task = "text-classification", 
+                      model="FacebookAI/roberta-large-mnli")
 
 # COMMAND ----------
 
@@ -69,8 +79,10 @@ def apply_model(s: pd.Series) -> pd.Series:
     result = [r['label'] for r in result]
     return pd.Series(result)
 
-df = dataset.withColumn('result', apply_model(F.col("text")))
-df.write.mode('overwrite').saveAsTable('test.sentiment_analysis.bronze_sentiment_with_label_predicted')
+df = dataset.select('text', 'sentiment',  apply_model(F.col("text")).alias('sentiment_prediction'))
+
+#df.write.mode('overwrite').saveAsTable('test.bronze_sentiment_with_label_predicted')
+df.display()
 
 # COMMAND ----------
 
