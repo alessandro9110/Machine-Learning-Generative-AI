@@ -1,9 +1,5 @@
 # Databricks notebook source
-dbutils.widgets.text("Catalog", "hive_metastore")
-dbutils.widgets.text("Schema", "streaming")
-
-CATALOG = dbutils.widgets.get("Catalog")
-SCHEMA  = dbutils.widgets.get("Schema")
+# MAGIC %run ./00.Config
 
 # COMMAND ----------
 
@@ -40,15 +36,11 @@ spark.sql(f"USE SCHEMA {SCHEMA}")
 
 # COMMAND ----------
 
-
-
-# COMMAND ----------
-
 # MAGIC %md ### Create a Volume
 
 # COMMAND ----------
 
-
+# MAGIC %sql CREATE VOLUME raw_streaming COMMENT 'This is a managed volume for the streaming files';
 
 # COMMAND ----------
 
