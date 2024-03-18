@@ -3,31 +3,19 @@
 
 # COMMAND ----------
 
-# MAGIC %md ### Create a compute cluster
-
-# COMMAND ----------
-
-
-
-# COMMAND ----------
-
-# MAGIC %md ### Create a Job Cluster
-
-# COMMAND ----------
-
-
-
-# COMMAND ----------
-
 # MAGIC %md ### Create Catalog, schema and tables 
 
 # COMMAND ----------
 
-if CATALOG != 'hive_metastore':
-    spark.sql(f"CREATE CATALOG IF NOT EXISTS {CATALOG} ")
-    spark.sql(f"USE CATALOG {CATALOG}")
-else:
-    spark.sql("USE CATALOG hive_metastore")
+
+try:
+    if CATALOG != 'hive_metastore':
+        spark.sql(f"CREATE CATALOG IF NOT EXISTS {CATALOG} ")
+        spark.sql(f"USE CATALOG {CATALOG}")
+    else:
+        spark.sql("USE CATALOG hive_metastore")
+except  Exception as ex:
+    print(ex)
 
 # COMMAND ----------
 
@@ -40,7 +28,7 @@ spark.sql(f"USE SCHEMA {SCHEMA}")
 
 # COMMAND ----------
 
-# MAGIC %sql CREATE VOLUME raw_streaming COMMENT 'This is a managed volume for the streaming files';
+#spark.sql("CREATE VOLUME raw_streaming COMMENT 'This is a managed volume for the streaming files'")
 
 # COMMAND ----------
 
