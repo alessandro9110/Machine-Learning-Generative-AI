@@ -39,11 +39,3 @@ for res in response.json()['statuses']:
      }
      )
     print(update.json())
-
-# COMMAND ----------
-
-
-
-# COMMAND ----------
-
-

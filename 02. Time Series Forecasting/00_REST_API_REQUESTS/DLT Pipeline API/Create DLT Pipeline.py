@@ -21,38 +21,66 @@ import requests
 
 # COMMAND ----------
 
-# List keys of a particular secret scope
-response = requests.post(
-  'https://%s/api/2.0/pipelines' % (DOMAIN),
-  headers={'Authorization': 'Bearer %s' % TOKEN},
-  json={
-    "pipeline_type": "WORKSPACE",
-    "clusters": [
-        {
-            "label": "default",
-            "node_type_id": "Standard_DS3_v2",
-            "num_workers": 1
-        }
-    ],
-    "development": True,
-    "continuous": True,
-    "channel": "CURRENT",
-    "photon": True,
-    "libraries": [
-        {
-            "notebook": {
-                "path": "/Repos/alessandro.armillotta@mitavanadeitaly.onmicrosoft.com/Machine-Learning-Generative-AI/02. Time Series Forecasting/01_Streaming_Pipeline/01.Delta Live Table Streaming"
+# Check if the DLT pipeline already exist
+pipeline_exist = False
+get_pipelines = requests.get(
+                            'https://%s/api/2.0/pipelines' % (DOMAIN),
+                            headers={'Authorization': 'Bearer %s' % TOKEN},
+                        )
+if len(get_pipelines.json()) != 0:
+    for i in get_pipelines.json()['statuses']:
+        if i['name'] == pipeline_name:
+            pipeline_exist = True
+            print(f"The pipeline {pipeline_name} already exists")
+
+# COMMAND ----------
+
+
+# Create the pipeline if not exist
+if not pipeline_exist:
+    # Create Pipeline
+    create_pipeline = requests.post(
+    'https://%s/api/2.0/pipelines' % (DOMAIN),
+    headers={'Authorization': 'Bearer %s' % TOKEN},
+    json={
+        "pipeline_type": "WORKSPACE",
+        "clusters": [
+            {
+                "label": "default",
+                "node_type_id": "Standard_DS3_v2",
+                "num_workers": 1
             }
-        }
-    ],
-    "name": pipeline_name,
-    "edition": "CORE",
-    "catalog": "streaming",
-    "configuration": {
-        "source_path": "abfss://raw@labadvanalytics.dfs.core.windows.net/IoT_Data/topic1"
-    },
-    "target": "streaming",
-    "data_sampling": False
-}
-)
-response.json()
+        ],
+        "development": True,
+        "continuous": True,
+        "channel": "CURRENT",
+        "photon": False,
+        "libraries": [
+            {
+                "notebook": {
+                    "path": "/Repos/alessandro.armillotta@mitavanadeitaly.onmicrosoft.com/Machine-Learning-Generative-AI/02. Time Series Forecasting/01_Streaming_Pipeline/01.Delta Live Table Streaming"
+                }
+            }
+        ],
+        "name": pipeline_name,
+        "edition": "CORE",
+        "catalog": "streaming",
+        "configuration": {
+            "source_path": "abfss://raw@labadvanalytics.dfs.core.windows.net/IoT_Data/topic1"
+        },
+        "target": "streaming",
+        "data_sampling": False
+    }
+    )
+    print(create_pipeline.json())
+    # Stop Pipeline
+    stop_pipeline = requests.post(
+                                f"https://%s/api/2.0/pipelines/{create_pipeline.json()['pipeline_id']}/stop" % (DOMAIN),
+                                headers={'Authorization': 'Bearer %s' % TOKEN},
+                                json={})
+    print(stop_pipeline.json())
+
+
+# COMMAND ----------
+
+
