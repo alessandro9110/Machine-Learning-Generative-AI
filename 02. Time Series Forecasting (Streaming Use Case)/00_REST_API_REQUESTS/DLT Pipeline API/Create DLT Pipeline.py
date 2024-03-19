@@ -4,7 +4,7 @@
 
 # COMMAND ----------
 
-dbutils.widgets.text('pipeline_name', 'dlt-streaming-topic1')
+dbutils.widgets.text('pipeline_name', 'dlt-streaming-ts1')
 pipeline_name = getArgument("pipeline_name")
 
 # COMMAND ----------
@@ -58,7 +58,7 @@ if not pipeline_exist:
         "libraries": [
             {
                 "notebook": {
-                    "path": "/Repos/alessandro.armillotta@mitavanadeitaly.onmicrosoft.com/Machine-Learning-Generative-AI/02. Time Series Forecasting/01_Streaming_Pipeline/01.Delta Live Table Streaming"
+                    "path": "/Repos/alessandro.armillotta@mitavanadeitaly.onmicrosoft.com/Machine-Learning-Generative-AI/02. Time Series Forecasting/01_Streaming_Pipeline/01.Delta Live Table Streaming TS1"
                 }
             }
         ],
@@ -66,7 +66,7 @@ if not pipeline_exist:
         "edition": "CORE",
         "catalog": "streaming",
         "configuration": {
-            "source_path": "abfss://raw@labadvanalytics.dfs.core.windows.net/IoT_Data/topic1"
+            "source_path": "abfss://raw@labadvanalytics.dfs.core.windows.net/IoT_Data/ts1"
         },
         "target": "streaming",
         "data_sampling": False

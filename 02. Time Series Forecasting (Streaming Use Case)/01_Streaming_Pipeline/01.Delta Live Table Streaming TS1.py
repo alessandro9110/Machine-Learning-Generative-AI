@@ -1,16 +1,18 @@
 # Databricks notebook source
 import dlt
-from pyspark.sql.functions import *
+import pyspark.sql.functions as F
+
+source = spark.conf.get("source_path")
 
 # COMMAND ----------
 
 @dlt.table(
-    name = "topic",
+    name = "bronze_TS1",
     comment = "Raw data IoT device",
+    table_properties = {"quality": "bronze"}
 
 )
-def topic():
-    source = spark.conf.get("source_path")
+def bronze_ts1():
     
     return (
         spark.readStream
@@ -18,8 +20,8 @@ def topic():
         .option("cloudFiles.format", "json")
         .load(f"{source}")
         .select(
-            current_timestamp().alias("processing_time"),
-            #input_file_name().alias("source_file"),
+            F.current_timestamp().alias("processing_time"),
+            #F.input_file_name().alias("source_file"),
             "*"
         )
     )
