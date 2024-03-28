@@ -4,8 +4,14 @@
 
 # COMMAND ----------
 
-dbutils.widgets.text('pipeline_name', 'dlt-streaming-ts1')
+dbutils.widgets.text('pipeline_name', 'dlt-streaming-ts')
 pipeline_name = getArgument("pipeline_name")
+
+dbutils.widgets.text('source_path1', 'abfss://raw@labadvanalytics.dfs.core.windows.net/IoT_Data/ts1')
+source_path1 = getArgument("source_path1")
+
+dbutils.widgets.text('source_path2', 'abfss://raw@labadvanalytics.dfs.core.windows.net/IoT_Data/ts2')
+source_path2 = getArgument("source_path2")
 
 # COMMAND ----------
 
@@ -57,16 +63,22 @@ if not pipeline_exist:
         "photon": False,
         "libraries": [
             {
-                "notebook": {
-                    "path": "/Repos/alessandro.armillotta@mitavanadeitaly.onmicrosoft.com/Machine-Learning-Generative-AI/02. Time Series Forecasting/01_Streaming_Pipeline/01.Delta Live Table Streaming TS1"
-                }
+            "notebook": {
+                "path": "/Repos/alessandro.armillotta@mitavanadeitaly.onmicrosoft.com/Machine-Learning-Generative-AI/02. Time Series Forecasting (Streaming Use Case)/01_Streaming_Pipeline/01.Delta Live Table Streaming TS1"
             }
+        },
+        {
+            "notebook": {
+                "path": "/Repos/alessandro.armillotta@mitavanadeitaly.onmicrosoft.com/Machine-Learning-Generative-AI/02. Time Series Forecasting (Streaming Use Case)/01_Streaming_Pipeline/01.Delta Live Table Streaming TS2"
+            }
+        }
         ],
         "name": pipeline_name,
         "edition": "CORE",
         "catalog": "streaming",
         "configuration": {
-            "source_path": "abfss://raw@labadvanalytics.dfs.core.windows.net/IoT_Data/ts1"
+            "source_path1": source_path1,
+            "source_path2": source_path2
         },
         "target": "streaming",
         "data_sampling": False

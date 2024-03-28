@@ -4,7 +4,7 @@
 
 # COMMAND ----------
 
-dbutils.widgets.text('pipeline_name', 'dlt-streaming-ts1')
+dbutils.widgets.text('pipeline_name', 'dlt-streaming-ts')
 pipeline_name = getArgument("pipeline_name")
 
 # COMMAND ----------
@@ -35,7 +35,7 @@ for res in response.json()['statuses']:
     update = requests.post(
       f"https://%s/api/2.0/pipelines/{res['pipeline_id']}/updates" % (DOMAIN),
       headers={'Authorization': 'Bearer %s' % TOKEN},
-      json={'full_refresh': True
+      json={'full_refresh': False
      }
      )
     print(update.json())

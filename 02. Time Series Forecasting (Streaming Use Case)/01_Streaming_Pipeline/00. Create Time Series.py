@@ -14,7 +14,7 @@ storage_location = getArgument("storage_location")
 
 # COMMAND ----------
 
-dbutils.fs.rm(f"{storage_location}", True)
+#dbutils.fs.rm(f"{storage_location}", True)
 
 # COMMAND ----------
 

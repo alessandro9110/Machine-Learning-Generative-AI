@@ -4,7 +4,7 @@
 
 # COMMAND ----------
 
-dbutils.widgets.text('pipeline_name', 'dlt-streaming-topic1')
+dbutils.widgets.text('pipeline_name', 'dlt-streaming-ts')
 pipeline_name = getArgument("pipeline_name")
 
 # COMMAND ----------

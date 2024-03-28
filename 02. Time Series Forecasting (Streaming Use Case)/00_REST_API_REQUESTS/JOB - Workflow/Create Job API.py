@@ -56,7 +56,7 @@ if not job_exist:
         "task_key": "create_ts1_data_points",
         "run_if": "ALL_SUCCESS",
         "notebook_task": {
-          "notebook_path": "/Repos/alessandro.armillotta@mitavanadeitaly.onmicrosoft.com/Machine-Learning-Generative-AI/02. Time Series Forecasting/01_Streaming_Pipeline/00. Create Time Series",
+          "notebook_path": "/Repos/alessandro.armillotta@mitavanadeitaly.onmicrosoft.com/Machine-Learning-Generative-AI/02. Time Series Forecasting (Streaming Use Case)/01_Streaming_Pipeline/00. Create Time Series",
           "base_parameters": {
             "storage_location": "abfss://raw@labadvanalytics.dfs.core.windows.net/IoT_Data/ts1"
           },
@@ -73,10 +73,10 @@ if not job_exist:
         "webhook_notifications": {}
       },
       {
-        "task_key": "create_ts1_data_points",
+        "task_key": "create_ts2_data_points",
         "run_if": "ALL_SUCCESS",
         "notebook_task": {
-          "notebook_path": "/Repos/alessandro.armillotta@mitavanadeitaly.onmicrosoft.com/Machine-Learning-Generative-AI/02. Time Series Forecasting/01_Streaming_Pipeline/00. Create Time Series",
+          "notebook_path": "/Repos/alessandro.armillotta@mitavanadeitaly.onmicrosoft.com/Machine-Learning-Generative-AI/02. Time Series Forecasting (Streaming Use Case)/01_Streaming_Pipeline/00. Create Time Series",
           "base_parameters": {
             "storage_location": "abfss://raw@labadvanalytics.dfs.core.windows.net/IoT_Data/ts2"
           },
